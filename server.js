@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var request = require('request');
 var cors = require('cors');
-var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
 app.use(express.static(__dirname + '/index'))
@@ -12,8 +11,7 @@ app.use(express.static(__dirname + '/index'))
     .use(express.urlencoded());
 
 
-const spotify = require("./services/spotify");
-const spotifyFun = require("./controllers/spotify.controller.server");
+const spotifyData = require("./services/spotify");
 
 var token = null;
 
@@ -25,12 +23,11 @@ setInterval(() => {
 const getToken = function() {
     // requesting access token from refresh token
     var authOptions = {
-
         url: 'https://accounts.spotify.com/api/token',
-        headers: { 'Authorization': 'Basic ' + (new Buffer(spotify.client_id + ':' + spotify.client_secret).toString('base64')) },
+        headers: { 'Authorization': 'Basic ' + (new Buffer(spotifyData.client_id + ':' + spotifyData.client_secret).toString('base64')) },
         form: {
             grant_type: 'refresh_token',
-            refresh_token: spotify.refresh_token
+            refresh_token: spotifyData.refresh_token
         },
         json: true
     };
@@ -39,15 +36,12 @@ const getToken = function() {
         if (!error && response.statusCode === 200) {
             token = body.access_token;
             app.set('token', token)
-            // console.log(token)
         }
     });
 };
 
-const searchRouter = require('./routes/search')
-app.use('/search', searchRouter)
-
-
+const searchRouter = require('./routers/spotify.search.router');
+app.use('/search', searchRouter);
 
 
 app.listen(8887, () =>  getToken());
