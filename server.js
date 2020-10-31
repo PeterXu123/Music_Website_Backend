@@ -17,9 +17,9 @@ const spotifyFun = require("./controllers/spotify.controller.server");
 
 var token = null;
 
-const refreshToken = setInterval(() => {
+setInterval(() => {
     getToken();
-}, 1000 * 60 * 55);
+}, 1000);
 
 
 const getToken = function() {
@@ -38,28 +38,16 @@ const getToken = function() {
     request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             token = body.access_token;
-            console.log(token)
+            app.set('token', token)
+            // console.log(token)
         }
     });
 };
 
+const searchRouter = require('./routes/search')
+app.use('/search', searchRouter)
 
-app.post('/search', function(req, res) {
-        var searchReq = {
-            url: `https://api.spotify.com/v1/search?q=${spotifyFun.convert(req.body.content)}&type=artist`,
-            headers: { 'Authorization': 'Bearer  ' +   token},
-            json: true
-        };
-        request.get(searchReq, function(error, response, body) {
-            if (!error && response.statusCode === 200) {
 
-                res.send(body.artists.items)
-            }
-            else {
-
-            }
-        });
-    });
 
 
 app.listen(8887, () =>  getToken());
