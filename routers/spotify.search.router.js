@@ -14,14 +14,15 @@ router.post("/artist", (req, res) => {
         };
         request.get(searchReq, function(error, response, body) {
             if (!error && response.statusCode === 200) {
-                // console.log(body.artists.items)
                 res.send(body.artists.items)
-                // console.log(req.app.get('token'))
             }
             else {
             }
         });
 });
+
+
+
 router.post("/artist/id", (req, res) => {
 
     let searchReq = {
@@ -33,12 +34,9 @@ router.post("/artist/id", (req, res) => {
         if (!error && response.statusCode === 200) {
             console.log(body)
             res.send(body)
-            console.log("fuck")
-            console.log(req.app.get('token'))
         }
         else {
             // console.log(response.statusCode)
-            console.log("why")
         }
     });
 });
@@ -69,12 +67,30 @@ router.post("/artist/songs", (req, res) => {
         if (!error && response.statusCode === 200) {
             // console.log(body)
             res.send(body.items)
-            console.log(req.app.get('token'))
         }
         else {
-            console.log(response.statusCode)
         }
     });
 });
+
+
+
+router.post("/song/id", (req, res) => {
+
+    let searchReq = {
+        url: `https://api.spotify.com/v1/albums/${req.body.id}`,
+        headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
+        json: true
+    };
+    request.get(searchReq, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(body)
+            res.send(body)
+        }
+        else {
+        }
+    });
+});
+
 
 module.exports = router;
