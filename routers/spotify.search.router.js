@@ -8,22 +8,44 @@ const convert = (content) => {
 
 router.post("/artist", (req, res) => {
         let searchReq = {
-            url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=artist`,
+            url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=artist&limit=50`,
             headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
             json: true
         };
         request.get(searchReq, function(error, response, body) {
             if (!error && response.statusCode === 200) {
+                // console.log(body.artists.items)
                 res.send(body.artists.items)
+                // console.log(req.app.get('token'))
             }
             else {
             }
         });
 });
+router.post("/artist/id", (req, res) => {
+
+    let searchReq = {
+        url: `https://api.spotify.com/v1/artists/${req.body.id}`,
+        headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
+        json: true
+    };
+    request.get(searchReq, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(body)
+            res.send(body)
+            console.log("fuck")
+            console.log(req.app.get('token'))
+        }
+        else {
+            // console.log(response.statusCode)
+            console.log("why")
+        }
+    });
+});
 
 router.post("/song", (req, res) => {
     let searchReq = {
-        url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=album `,
+        url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=album&limit=50`,
         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
         json: true
     };
@@ -32,6 +54,25 @@ router.post("/song", (req, res) => {
             res.send(body.albums.items)
         }
         else {
+        }
+    });
+});
+
+router.post("/artist/songs", (req, res) => {
+    let searchReq = {
+        url: `https://api.spotify.com/v1/artists/${req.body.id}/albums`,
+        headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
+        json: true
+    };
+    console.log(req.body.id)
+    request.get(searchReq, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            // console.log(body)
+            res.send(body.items)
+            console.log(req.app.get('token'))
+        }
+        else {
+            console.log(response.statusCode)
         }
     });
 });
