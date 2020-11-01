@@ -84,13 +84,15 @@ router.post("/song/id", (req, res) => {
     };
     request.get(searchReq, function(error, response, body) {
         if (!error && response.statusCode === 200) {
-            console.log(body)
             res.send(body)
         }
         else {
         }
     });
 });
+
+
+
 
 
 module.exports = router;
