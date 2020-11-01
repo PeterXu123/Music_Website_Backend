@@ -44,4 +44,4 @@ const searchRouter = require('./routers/spotify.search.router');
 app.use('/search', searchRouter);
 
 
-app.listen(8887, () =>  getToken());
+app.listen(process.env.PORT || 8887, () =>  getToken());
