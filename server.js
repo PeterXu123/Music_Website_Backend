@@ -29,7 +29,7 @@ var token = null;
 
 setInterval(() => {
     getToken();
-}, 1000);
+}, 1000 * 3500);
 
 
 const getToken = function() {
@@ -47,6 +47,7 @@ const getToken = function() {
     request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             token = body.access_token;
+            // console.log(token)
             app.set('token', token)
         }
     });
