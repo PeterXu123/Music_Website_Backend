@@ -41,6 +41,27 @@ router.post("/artist/id", (req, res) => {
     });
 });
 
+
+router.post("/album/songs", (req, res) => {
+    let searchReq = {
+        url: `https://api.spotify.com/v1/albums/${req.body.id}/tracks`,
+        headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
+        json: true
+    };
+    console.log(req.body.id)
+    request.get(searchReq, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(321)
+            console.log(body)
+            res.send(body)
+        }
+        else {
+            console.log(123)
+            console.log(error)
+        }
+    });
+});
+
 router.post("/song", (req, res) => {
     let searchReq = {
         url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=track&limit=50`,
