@@ -43,20 +43,21 @@ router.post("/artist/id", (req, res) => {
 
 router.post("/song", (req, res) => {
     let searchReq = {
-        url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=album&limit=50`,
+        url: `https://api.spotify.com/v1/search?q=${convert(req.body.content)}&type=track&limit=50`,
         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
         json: true
     };
     request.get(searchReq, function(error, response, body) {
         if (!error && response.statusCode === 200) {
-            res.send(body.albums.items)
+            res.send(body.tracks.items);
         }
         else {
+            console.log("errr=================")
         }
     });
 });
 
-router.post("/artist/songs", (req, res) => {
+router.post("/artist/albums", (req, res) => {
     let searchReq = {
         url: `https://api.spotify.com/v1/artists/${req.body.id}/albums`,
         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
@@ -78,7 +79,7 @@ router.post("/artist/songs", (req, res) => {
 router.post("/song/id", (req, res) => {
 
     let searchReq = {
-        url: `https://api.spotify.com/v1/albums/${req.body.id}`,
+        url: `https://api.spotify.com/v1/tracks/${req.body.id}`,
         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
         json: true
     };
