@@ -19,7 +19,8 @@ app.use(cors({
 app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
-    secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld'
+    secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
+    cookie: {maxAge: 1000 * 3600}
 }));
 
 const uri = process.env.ATLAS_URI;
