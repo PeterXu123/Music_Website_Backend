@@ -3,22 +3,33 @@ var app = express();
 var request = require('request');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
-
+var session = require('express-session')
+const mongoose = require('mongoose')
+require('dotenv').config()
 app.use(express.static(__dirname + '/index'))
-    .use(cors())
     .use(cookieParser())
     .use(express.json())
     .use(express.urlencoded());
+app.use(cors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+}))
 
 
-app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers',
-               'Content-Type, X-Requested-With, Origin');
-    res.header('Access-Control-Allow-Methods',
-               'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    next();
-});
+app.use(session({
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false, // don't create session until something stored
+    secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld'
+}));
+
+const uri = process.env.ATLAS_URI;
+console.log(uri);
+mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
+        true });
+const connection = mongoose.connection;
+connection.once('open', () => {
+    console.log("MongoDB database connection established successfully")
+})
 
 
 
@@ -34,6 +45,7 @@ setInterval(() => {
 
 const getToken = function() {
     // requesting access token from refresh token
+
     var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
         headers: { 'Authorization': 'Basic ' + (new Buffer(spotifyData.client_id + ':' + spotifyData.client_secret).toString('base64')) },
@@ -53,8 +65,9 @@ const getToken = function() {
     });
 };
 
-const searchRouter = require('./routers/spotify.search.router');
+const searchRouter = require('./routers/spotify.search.route');
+const usersRouter = require('./routers/user.route')
 app.use('/search', searchRouter);
-
+app.use('/users', usersRouter)
 
 app.listen(process.env.PORT || 8887, () =>  getToken());

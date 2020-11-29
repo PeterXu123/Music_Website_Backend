@@ -10,15 +10,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supercharge/strings": "^1.16.0",
     "body-parse": "^0.1.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.10.17",
     "nodemon": "^2.0.6",
+    "pbkdf2-password": "^1.2.1",
     "query-string": "^6.13.6",
+    "request": "^2.88.2",
     "serve": "^11.3.2",
-    "request": "^2.88.2"
+    "striptags": "^3.1.1",
+    "dotenv": "^8.2.0"
   },
   "engines": {
     "node": "10.16.2"
