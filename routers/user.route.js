@@ -66,13 +66,14 @@ router.route('/users').get((req, res) => {
 
 router.route('/profile').get(restricted, getUserProfile)
 
-router.route('/:id').get((req, res) => {
+router.route('/find/:id').get((req, res) => {
     console.log(49)
     if (!req.session.user) {
         User.find()
             .then(users => {
                 req.session.user = users.find(u => u._id === req.params.id)
             })
+
         // req.session.user = User.find(u => u._id === req.params.id)
     }
     res.json(req.session.user)
@@ -98,6 +99,17 @@ router.route('/login').post((req, res) => {
         }
 
     })
+})
+
+router.route("/logout").get((req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            res.json(error);
+        }
+        res.sendStatus(200);
+
+    })
+
 })
 
 router.route("/register").post((req, res) => {
