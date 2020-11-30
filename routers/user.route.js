@@ -100,7 +100,7 @@ router.route('/login').post((req, res) => {
     })
 })
 
-router.route("/users").post((req, res) => {
+router.route("/register").post((req, res) => {
     let newUser = req.body
     let username = striptags(req.body.username)
     if (username !== req.body.username) {
@@ -114,10 +114,13 @@ router.route("/users").post((req, res) => {
         const new_user = new User({...newUser})
         new_user.save()
             .then(() => {
-                let respUser = {...new_user}
-                delete respUser.hash
-                delete respUser.salt
-                delete respUser.password
+                let respUser = {username: newUser.username}
+                req.session.user = respUser;
+                // delete respUser.hash
+                // delete respUser.salt
+                //
+                // delete respUser.password
+
                 res.json(respUser)
             })
 
