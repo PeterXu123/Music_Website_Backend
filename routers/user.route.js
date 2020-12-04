@@ -15,12 +15,13 @@ const restricted = (req, res, next) => {
     }
 }
 
+
 const getUserProfile = (req, res) => {
-    console.log("fuck")
-    let respUser = {...req.session.user}
-    delete respUser.hash
-    delete respUser.salt
-    res.json(respUser)
+    let t = new Date();
+    let rest = new Date(req.session.user.expired) - t;
+    console.log(rest);
+    console.log(req.session.user.expired)
+    res.json({username: req.session.user.username, expired: req.session.user.expired, rest: rest})
 }
 
 async function authenticate(name, pass, fn) {
@@ -65,7 +66,10 @@ router.route('/users').get((req, res) => {
 // })
 
 router.route('/profile').get(restricted, getUserProfile)
-
+Date.prototype.addHours = function (h) {
+    this.setTime(this.getTime() + (h * 60 * 59 * 1000));
+    return this;
+}
 router.route('/find/:id').get((req, res) => {
     console.log(49)
     if (!req.session.user) {
@@ -79,6 +83,33 @@ router.route('/find/:id').get((req, res) => {
     res.json(req.session.user)
 })
 
+router.route('/getUser').get((req, res) => {
+    if (req.session.user) {
+        let t = new Date();
+        let rest = new Date(req.session.user.expired) - t;
+        console.log(rest);
+        console.log(req.session.user.expired)
+        res.json({username: req.session.user.username, expired: req.session.user.expired, rest: rest})
+    } else {
+        res.send(401);
+    }
+})
+
+// router.route('/fillwer').post((req, res) => {
+//     if (req.session.user) {
+//         let t = new Date();
+//         let rest = new Date(req.session.user.expired) - t;
+//         console.log(rest);
+//         console.log(req.session.user.expired)
+//         res.json({username: req.session.user.username, expired: req.session.user.expired, rest: rest})
+//     } else {
+//         res.send(401);
+//     }
+// })
+
+
+
+
 router.route('/login').post((req, res) => {
     authenticate(req.body.username, req.body.password, (error, user) => {
         if (error) {
@@ -86,11 +117,18 @@ router.route('/login').post((req, res) => {
         }
         if (user) {
             req.session.regenerate(() => {
-                req.session.user = user;
+                let start = new Date();
+                let expired = new Date().addHours(1);
+                let rest = expired - start;
+                console.log(expired)
+                console.log(start)
+                req.session.user = {username: req.body.username, rest, expired};
+                user = req.session.user
                 req.session.success = 'Authenticated as ' + user.name
                     + ' click to <a href="/logout">logout</a>. '
                     + ' You may now access <a href="/restricted">/restricted</a>.';
                 res.json(user);
+
 
             })
         } else {
@@ -126,8 +164,13 @@ router.route("/register").post((req, res) => {
         const new_user = new User({...newUser})
         new_user.save()
             .then(() => {
-                let respUser = {username: newUser.username}
+                let start = new Date();
+                let expired = new Date().addHours(1);
+                let rest = expired - start;
+                let respUser = {username: newUser.username, rest, expired}
                 req.session.user = respUser;
+
+
                 // delete respUser.hash
                 // delete respUser.salt
                 //
@@ -146,9 +189,6 @@ router.route('/:id').delete((req, res) => {
         .catch(error => res.status(400).json('Error: ' + error))
 
 })
-
-
-
 
 
 module.exports = router
