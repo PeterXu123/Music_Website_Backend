@@ -8,7 +8,7 @@ const musicSchema = mongoose.Schema(
             ref: 'Comment'
         }],
     },
-    {collection: 'music'});
+    {collection: 'musics'});
 
 const Music = mongoose.model('Music', musicSchema)
 module.exports = Music;

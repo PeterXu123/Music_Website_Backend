@@ -127,12 +127,10 @@ router.route('/filler').post((req, res) => {
 router.route('/login').post((req, res) => {
     authenticate(req.body.username, req.body.password, (error, user) => {
         if (error) {
-            console.log("11111111")
-            console.log(error)
+
             return res.status(400).send(error.toString());
         }
         if (user) {
-            console.log("line 131")
             req.session.regenerate(() => {
                 let start = new Date();
                 let expired = new Date().addHours(1);
@@ -153,7 +151,6 @@ router.route('/login').post((req, res) => {
             req.session.error = 'Authentication failed, please check your '
                                 + ' username and password.'
 
-            console.log("line 153")
             res.status(400).send('Error: ' + req.session.error)
 
         }
@@ -173,13 +170,11 @@ router.route("/logout").get((req, res) => {
 })
 
 router.route("/register").post((req, res) => {
-    console.log("register")
     let newUser = req.body
     let username = striptags(req.body.username)
     if (username !== req.body.username) {
         return res.json({status: 'Invalid username'})
     }
-    console.log("sssssss");
     User.findOne({ username: username }).exec()
         .then(users => {
             if(users !== null) {
@@ -206,13 +201,6 @@ router.route("/register").post((req, res) => {
 
                             })
 
-
-
-
-                            // delete respUser.hash
-                            // delete respUser.salt
-                            //
-                            // delete respUser.password
 
 
                         })
