@@ -27,7 +27,9 @@ const getUserProfile = (req, res) => {
 async function authenticate(name, pass, fn) {
     await User.findOne({'username': name}).exec((error, user) => {
             if (!user) {
-                return new Error('cannot find user');
+                console.log(122)
+                fn(null, null);
+
             }
             // apply the same algorithm to the POSTed password, applying
             // the hash against the pass / salt, if there is a match we
@@ -42,12 +44,14 @@ async function authenticate(name, pass, fn) {
                     console.log(user)
                     return fn(null, user)
                 }
+                console.log("line 47")
                 fn(new Error('invalid password'));
             });
         }
     )
 
 }
+
 
 
 router.route('/users').get((req, res) => {
@@ -123,9 +127,12 @@ router.route('/filler').post((req, res) => {
 router.route('/login').post((req, res) => {
     authenticate(req.body.username, req.body.password, (error, user) => {
         if (error) {
-            res.send({status: error})
+            console.log("11111111")
+            console.log(error)
+            return res.status(400).send(error.toString());
         }
         if (user) {
+            console.log("line 131")
             req.session.regenerate(() => {
                 let start = new Date();
                 let expired = new Date().addHours(1);
@@ -141,9 +148,14 @@ router.route('/login').post((req, res) => {
 
 
             })
-        } else {
+        }
+        else {
             req.session.error = 'Authentication failed, please check your '
-                + ' username and password.';
+                                + ' username and password.'
+
+            console.log("line 153")
+            res.status(400).send('Error: ' + req.session.error)
+
         }
 
     })
@@ -161,35 +173,55 @@ router.route("/logout").get((req, res) => {
 })
 
 router.route("/register").post((req, res) => {
+    console.log("register")
     let newUser = req.body
     let username = striptags(req.body.username)
     if (username !== req.body.username) {
-        res.json({status: 'Invalid username'})
-        return
+        return res.json({status: 'Invalid username'})
     }
-    hash({password: newUser.password}, (err, pass, salt, hash) => {
-        delete newUser.password
-        newUser.hash = hash
-        newUser.salt = salt
-        const new_user = new User({...newUser})
-        new_user.save()
-            .then(() => {
-                let start = new Date();
-                let expired = new Date().addHours(1);
-                let rest = expired - start;
-                let respUser = {username: newUser.username, rest, expired}
-                req.session.user = respUser;
+    console.log("sssssss");
+    User.findOne({ username: username }).exec()
+        .then(users => {
+            if(users !== null) {
+                console.log(186)
+                return res.status(400).send("User exist");
+            }
+            else {
+                console.log("user doesn't exist")
+                hash({password: newUser.password}, (err, pass, salt, hash) => {
+                    delete newUser.password
+                    newUser.hash = hash
+                    newUser.salt = salt
+                    const new_user = new User({...newUser})
+                    new_user.save()
+                        .then(() => {
+                            req.session.regenerate(() => {
+
+                                let start = new Date();
+                                let expired = new Date().addHours(1);
+                                let rest = expired - start;
+                                let respUser = {username: newUser.username, rest, expired}
+                                req.session.user = respUser;
+                                res.json(respUser)
+
+                            })
 
 
-                // delete respUser.hash
-                // delete respUser.salt
-                //
-                // delete respUser.password
 
-                res.json(respUser)
-            })
 
-    });
+                            // delete respUser.hash
+                            // delete respUser.salt
+                            //
+                            // delete respUser.password
+
+
+                        })
+
+                });
+            }
+        })
+
+
 })
 
 
