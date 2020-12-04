@@ -93,7 +93,9 @@ router.route('/getUser').get((req, res) => {
         let rest = new Date(req.session.user.expired) - t;
         console.log(rest);
         console.log(req.session.user.expired)
-        res.json({username: req.session.user.username, expired: req.session.user.expired, rest: rest})
+        res.json({username: req.session.user.username,
+                     userId: req.session.user.userId,
+                     expired: req.session.user.expired, rest: rest})
     } else {
         res.send(401);
     }
@@ -137,7 +139,8 @@ router.route('/login').post((req, res) => {
                 let rest = expired - start;
                 console.log(expired)
                 console.log(start)
-                req.session.user = {username: req.body.username, rest, expired};
+                req.session.user = {username: req.body.username,
+                    userId: user._id, rest, expired};
                 user = req.session.user
                 req.session.success = 'Authenticated as ' + user.name
                     + ' click to <a href="/logout">logout</a>. '
@@ -189,13 +192,14 @@ router.route("/register").post((req, res) => {
                     newUser.salt = salt
                     const new_user = new User({...newUser})
                     new_user.save()
-                        .then(() => {
+                        .then((user) => {
+                            console.log(user);
                             req.session.regenerate(() => {
 
                                 let start = new Date();
                                 let expired = new Date().addHours(1);
                                 let rest = expired - start;
-                                let respUser = {username: newUser.username, rest, expired}
+                                let respUser = {username: newUser.username, userId: user._id, rest, expired}
                                 req.session.user = respUser;
                                 res.json(respUser)
 
