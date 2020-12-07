@@ -23,7 +23,7 @@ const userSchema = new Schema(
     hash: String
 }, {
     timestamps: true
-})
+},  {collection: 'users'})
 
 const User = mongoose.model('User', userSchema)
 
