@@ -12,13 +12,13 @@ app.use(express.static(__dirname + '/index'))
     .use(express.urlencoded());
 app.use(cors({
     origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000"],
-    credentials: false,
+    credentials: true,
 }))
 
 
 app.use(session({
     resave: false, // don't save session if unmodified
-    saveUninitialized: true, // don't create session until something stored
+    saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld'
 }));
 
