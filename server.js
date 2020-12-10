@@ -2,12 +2,11 @@ var express = require('express');
 var app = express();
 var request = require('request');
 var cors = require('cors');
-var cookieParser = require('cookie-parser');
+
 var session = require('express-session')
 const mongoose = require('mongoose')
 require('dotenv').config()
 app.use(express.static(__dirname + '/index'))
-    .use(cookieParser())
     .use(express.json())
     .use(express.urlencoded());
 app.set('trust proxy', 1)
