@@ -12,7 +12,7 @@ const restricted = (req, res, next) => {
         console.log(116)
 
         req.session.error = 'Access denied!';
-        res.send(403);
+        res.send(req.session.user);
     }
 }
 
