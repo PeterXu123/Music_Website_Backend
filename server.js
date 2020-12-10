@@ -10,6 +10,7 @@ app.use(express.static(__dirname + '/index'))
     .use(cookieParser())
     .use(express.json())
     .use(express.urlencoded());
+app.set('trust proxy', 1)
 app.use(cors({
     origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000"],
     credentials: true,
@@ -18,7 +19,7 @@ app.use(cors({
 
 app.use(session({
     resave: false, // don't save session if unmodified
-    saveUninitialized: false, // don't create session until something stored
+    saveUninitialized: true, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld'
 }));
 
