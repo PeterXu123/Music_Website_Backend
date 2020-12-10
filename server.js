@@ -1,9 +1,11 @@
+
 var express = require('express');
 var app = express();
 var request = require('request');
 var cors = require('cors');
 
 var session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose')
 require('dotenv').config()
 app.use(express.static(__dirname + '/index'))
@@ -35,6 +37,9 @@ mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedT
         true });
 const connection = mongoose.connection;
 
+app.use(session({
+    store: new MongoStore({mongooseConnection: connection})
+}))
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully")
 })
