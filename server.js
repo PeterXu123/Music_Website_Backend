@@ -1,3 +1,5 @@
+import {MongoStore} from "connect-mongo";
+
 var express = require('express');
 var app = express();
 var request = require('request');
@@ -18,8 +20,12 @@ app.use(cors({
 
 app.use(session({
     resave: false, // don't save session if unmodified
-    saveUninitialized: true, // don't create session until something stored
-    secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld'
+    saveUninitialized: false, // don't create session until something stored
+    secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
+    store: new MongoStore(),
+    proxy: true,
+    cookie: {secure: true, sameSite: "None"}
+
 }));
 
 const uri = process.env.ATLAS_URI;
