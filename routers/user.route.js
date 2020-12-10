@@ -10,6 +10,7 @@ const restricted = (req, res, next) => {
         next();
     } else {
         console.log(116)
+
         req.session.error = 'Access denied!';
         res.send(403);
     }
@@ -173,6 +174,7 @@ router.route("/logout").get((req, res) => {
 })
 
 router.route("/register").post((req, res) => {
+    console.log("wtf")
     let newUser = req.body
     let username = striptags(req.body.username)
     if (username !== req.body.username) {
