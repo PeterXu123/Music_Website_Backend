@@ -11,7 +11,7 @@ require('dotenv').config()
 app.use(express.static(__dirname + '/index'))
     .use(express.json())
     .use(express.urlencoded());
-app.set('trust proxy', 1)
+
 app.use(cors({
     origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000"],
     credentials: true,
@@ -23,7 +23,7 @@ app.use(session({
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
-    cookie: {secure: true, sameSite: "None"}
+    cookie: {secure: false, sameSite: "None"}
 
 }));
 
