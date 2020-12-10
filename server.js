@@ -22,7 +22,6 @@ app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
-    store: new MongoStore(),
     proxy: true,
     cookie: {secure: true, sameSite: "None"}
 
@@ -33,6 +32,7 @@ console.log(uri);
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
         true });
 const connection = mongoose.connection;
+
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully")
 })
