@@ -10,9 +10,8 @@ const restricted = (req, res, next) => {
         next();
     } else {
         console.log(116)
-
         req.session.error = 'Access denied!';
-        res.send(req.session.user);
+        res.send(403);
     }
 }
 
@@ -111,9 +110,6 @@ router.route('/filler').post((req, res) => {
 
             req.session.user = {username: req.body.username, rest, expired};
             user = req.session.user
-            req.session.success = 'Authenticated as ' + user.name
-                + ' click to <a href="/logout">logout</a>. '
-                + ' You may now access <a href="/restricted">/restricted</a>.';
             res.json(user);
 
 
@@ -143,9 +139,6 @@ router.route('/login').post((req, res) => {
                 req.session.user = {username: req.body.username,
                     userId: user._id, rest, expired};
                 user = req.session.user
-                req.session.success = 'Authenticated as ' + user.name
-                    + ' click to <a href="/logout">logout</a>. '
-                    + ' You may now access <a href="/restricted">/restricted</a>.';
                 res.json(user);
 
 
