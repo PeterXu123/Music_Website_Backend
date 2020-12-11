@@ -27,7 +27,7 @@ const getUserProfile = (req, res) => {
 }
 
 async function authenticate(email, pass, fn) {
-    await User.findOne({'email': name}).exec((error, user) => {
+    await User.findOne({'email': email}).exec((error, user) => {
             if (!user) {
                 console.log(122)
                 fn(null, null);
