@@ -21,11 +21,13 @@ const getUserProfile = (req, res) => {
     let rest = new Date(req.session.user.expired) - t;
     console.log(rest);
     console.log(req.session.user.expired)
-    res.json({username: req.session.user.username, expired: req.session.user.expired, rest: rest})
+    res.json({username: req.session.user.username,
+        email: req.session.user.email,
+        expired: req.session.user.expired, rest: rest})
 }
 
-async function authenticate(name, pass, fn) {
-    await User.findOne({'username': name}).exec((error, user) => {
+async function authenticate(email, pass, fn) {
+    await User.findOne({'email': name}).exec((error, user) => {
             if (!user) {
                 console.log(122)
                 fn(null, null);
@@ -94,27 +96,9 @@ router.route('/getUser').get((req, res) => {
         console.log(rest);
         console.log(req.session.user.expired)
         res.json({username: req.session.user.username,
+                    email: req.session.user.email,
                      userId: req.session.user.userId,
                      expired: req.session.user.expired, rest: rest})
-    } else {
-        res.send(401);
-    }
-})
-
-router.route('/filler').post((req, res) => {
-    if (req.session.user) {
-        req.session.regenerate(() => {
-            let start = new Date();
-            let expired = new Date().addHours(1);
-            let rest = expired - start;
-
-            req.session.user = {username: req.body.username, rest, expired};
-            user = req.session.user
-            res.json(user);
-
-
-        })
-
     } else {
         res.send(401);
     }
@@ -124,7 +108,7 @@ router.route('/filler').post((req, res) => {
 
 
 router.route('/login').post((req, res) => {
-    authenticate(req.body.username, req.body.password, (error, user) => {
+    authenticate(req.body.email, req.body.password, (error, user) => {
         if (error) {
 
             return res.status(400).send(error.toString());
@@ -134,9 +118,8 @@ router.route('/login').post((req, res) => {
                 let start = new Date();
                 let expired = new Date().addHours(1);
                 let rest = expired - start;
-                console.log(expired)
-                console.log(start)
-                req.session.user = {username: req.body.username,
+                req.session.user = {username: user.username,
+                    email: user.email,
                     userId: user._id, rest, expired};
                 user = req.session.user
                 res.json(user);
@@ -167,17 +150,19 @@ router.route("/logout").get((req, res) => {
 })
 
 router.route("/register").post((req, res) => {
-    console.log("wtf")
     let newUser = req.body
     let username = striptags(req.body.username)
+    let email = striptags(req.body.email)
     if (username !== req.body.username) {
         return res.json({status: 'Invalid username'})
     }
-    User.findOne({ username: username }).exec()
+    if (email !== req.body.email) {
+        return res.json({status: 'Invalid email'})
+    }
+    User.findOne({ email: email }).exec()
         .then(users => {
             if(users !== null) {
-                console.log(186)
-                return res.status(400).send("User exist");
+                return res.status(409).send("User exist");
             }
             else {
                 console.log("user doesn't exist")
@@ -194,7 +179,9 @@ router.route("/register").post((req, res) => {
                                 let start = new Date();
                                 let expired = new Date().addHours(1);
                                 let rest = expired - start;
-                                let respUser = {username: newUser.username, userId: user._id, rest, expired}
+                                let respUser = {username: newUser.username, userId: user._id,
+                                    email:  user.email,
+                                    rest, expired}
                                 req.session.user = respUser;
                                 res.json(respUser)
 
