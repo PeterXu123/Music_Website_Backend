@@ -1,7 +1,7 @@
 const striptags = require("striptags");
 const router = require('express').Router()
 let Comment = require('../models/comment.model')
-
+let Music = require('../models/music.model')
 
 router.route('/createComment').post((req, res) => {
     let musicId = req.body.musicId;
@@ -12,7 +12,17 @@ router.route('/createComment').post((req, res) => {
             userId: userId,
             content: content})
         .then((comment) => {
-            res.json(comment)
+            Music.findOne({musicId: musicId}).exec((error, music) => {
+                if (error) {
+                    res.statusCode(404).json(error)
+
+                }
+                else if(music != null) {
+                    music.comments.push(comment);
+                    music.save();
+                    res.json(comment)
+                }
+            })
         })
         .catch((error) => res.json(error))
 })
