@@ -3,6 +3,8 @@ const striptags = require("striptags");
 const router = require('express').Router()
 let User = require('../models/user.model')
 let Music = require('../models/music.model')
+let Comment = require('../models/comment.model')
+
 
 var hash = require('pbkdf2-password')()
 const restricted = (req, res, next) => {
@@ -298,7 +300,23 @@ router.route('/removeFav').put( async (req, res) => {
 })
 
 
+router.route('/findAllUser').get((req, res) => {
+    User.find()
+        .then(users => res.json(users))
+        .catch(error => res.status(400).json('Error: ' + error))
+});
 
+
+router.route('/removeUser/:uid').delete((req, res) => {
+    let userId = req.params.uid;
+    Comment.remove({userId: userId})
+        .then((comment) =>
+                  User.remove({_id: userId})
+                      .then((r) => res.json(r))
+    )
+
+
+});
 
 
 
