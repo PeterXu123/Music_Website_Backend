@@ -106,12 +106,35 @@ router.post("/song/id", (req, res) => {
     };
     request.get(searchReq, function(error, response, body) {
         if (!error && response.statusCode === 200) {
+            console.log("!!!!!!!!!!!!!ß")
+            console.log(body)
             res.send(body)
         }
         else {
         }
     });
 });
+
+
+
+
+
+
+// router.post("/popular", (req, res) => {
+//     let searchReq = {
+//         url: convert(`https://api.spotify.com/v1/tracks`),
+//         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
+//         json: true
+//     };
+//     request.get(searchReq, function(error, response, body) {
+//         if (!error && response.statusCode === 200) {
+//             console.log("----------------------------")
+//             res.send(body)
+//         }
+//         else {
+//         }
+//     });
+// });
 
 
 

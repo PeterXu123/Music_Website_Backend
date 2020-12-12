@@ -307,13 +307,24 @@ router.route('/findAllUser').get((req, res) => {
 });
 
 
-router.route('/removeUser/:uid').delete((req, res) => {
+router.route('/removeUser/:uid').delete( async(req, res) => {
     let userId = req.params.uid;
+    let commentList = await Comment.find({userId: userId}).exec();
+    for(let i of commentList) {
+        let m = await Music.findOne({musicId : i.musicId}).populate("comments").exec();
+        let cl =  m.comments;
+        let comments = cl.filter(coms => coms.userId != userId);
+        await Music.update({musicId: i.musicId}, {$set :  {comments: comments}}).exec()
+    }
+    console.log("319")
     Comment.remove({userId: userId})
         .then((comment) =>
                   User.remove({_id: userId})
                       .then((r) => res.json(r))
-    )
+        )
+
+    console.log(commentList);
+
 
 
 });
