@@ -80,7 +80,9 @@ const getToken = function() {
 
 const searchRouter = require('./routers/spotify.search.route');
 const usersRouter = require('./routers/user.route')
+const musicRouter = require('./routers/music.route')
 app.use('/search', searchRouter);
 app.use('/users', usersRouter)
+app.use('/musics', musicRouter)
 
 app.listen(process.env.PORT || 8887, () =>  getToken());
