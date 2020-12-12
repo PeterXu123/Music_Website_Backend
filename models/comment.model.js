@@ -3,7 +3,8 @@ const commentSchema = mongoose.Schema(
     {
         content: String,
         musicId: String,
-        userId: String
+        userId: String,
+        userName: String
     },
     {collection: 'comments'});
 

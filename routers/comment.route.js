@@ -7,10 +7,13 @@ router.route('/createComment').post((req, res) => {
     let musicId = req.body.musicId;
     let userId = req.body.userId;
     let content = req.body.content;
+    let username = req.body.username;
+    console.log(username)
     Comment.create(
         {musicId: musicId,
             userId: userId,
-            content: content})
+            content: content,
+            userName: username})
         .then((comment) => {
             Music.findOne({musicId: musicId}).exec((error, music) => {
                 if (error) {
@@ -18,6 +21,7 @@ router.route('/createComment').post((req, res) => {
 
                 }
                 else if(music != null) {
+                    console.log(comment)
                     music.comments.push(comment);
                     music.save();
                     res.json(comment)
@@ -38,23 +42,5 @@ router.route('/findAllComments/:musicId').get((req, res) => {
         .populate("comments")
         .then((comments) => res.json(comments))
     })
-    // Music.findOne({musicId: musicId}).exec((error, music) => {
-    //             if (error) {
-    //                 res.statusCode(404).json(error)
-    //
-    //             }
-    //             else if(music != null) {
-    //                 music.comments.push(comment);
-    //                 music.save();
-    //                 res.json(comment)
-    //             }
-    //         })
-    //     })
-    //     .catch((error) => res.json(error))
-
-
-
-
-
 
 module.exports = router;
