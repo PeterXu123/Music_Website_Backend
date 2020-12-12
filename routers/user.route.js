@@ -23,6 +23,8 @@ const getUserProfile = (req, res) => {
     console.log(req.session.user.expired)
     res.json({username: req.session.user.username,
         email: req.session.user.email,
+        phoneNumber: req.session.user.phoneNumber,
+        userId: req.session.user.userId,
         expired: req.session.user.expired, rest: rest})
 }
 
@@ -89,20 +91,51 @@ router.route('/find/:id').get((req, res) => {
     res.json(req.session.user)
 })
 
-router.route('/getUser').get((req, res) => {
+router.route('/update/:id').put( async(req, res) => {
+    console.log("update")
     if (req.session.user) {
-        let t = new Date();
-        let rest = new Date(req.session.user.expired) - t;
-        console.log(rest);
-        console.log(req.session.user.expired)
-        res.json({username: req.session.user.username,
-                    email: req.session.user.email,
-                     userId: req.session.user.userId,
-                     expired: req.session.user.expired, rest: rest})
-    } else {
-        res.send(401);
+        const product = await User.findById(req.params.id).exec();
+        if (!product) return res.status(404).send('The product with the given ID was not found.');
+        let query = {$set: {}};
+        for (let key in req.body) {
+            if (product[key] && product[key] !== req.body[key]) {
+                console.log(req.body[key])
+                query.$set[key] = req.body[key];
+            }// if the field we have in req.body exists, we're gonna update it
+
+            else {
+                console.log("fuck")
+                console.log(req.body[key])
+                query.$set[key] = req.body[key];
+            }
+
+        }
+
+
+        const updatedProduct = await User.updateOne({_id: req.params.id}, query).exec();
+        console.log("fdsfdsfsd")
+        console.log(updatedProduct)
+        req.session.user =
+        {username: req.body.username,
+            email: req.session.user.email,
+            phoneNumber: req.body.phoneNumber,
+            userId: req.session.user.userId,
+            expired: req.session.user.expired}
+        res.send(req.session.user)
+
     }
+    //     let query = {$set: {}}
+    //     for (let key in req.body) {
+    //         if (product[key] && product[key] !== req.body[key]) // if the field we have in req.body exists, we're gonna update it
+    //             query.$set[key] = req.body[key];
+    //
+    // }
+
+
+
 })
+
+
 
 
 
@@ -120,7 +153,7 @@ router.route('/login').post((req, res) => {
                 let rest = expired - start;
                 req.session.user = {username: user.username,
                     email: user.email,
-                    userId: user._id, rest, expired};
+                    userId: user._id, rest, expired, phoneNumber: user.phoneNumber};
                 user = req.session.user
                 res.json(user);
 

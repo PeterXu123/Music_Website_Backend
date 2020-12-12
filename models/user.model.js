@@ -26,6 +26,9 @@ const userSchema = new Schema(
             trim: true,
             minlength: 7,
         },
+        phoneNumber: {
+            type: String
+        },
         salt: String,
         hash: String
     }, {
