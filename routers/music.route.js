@@ -29,6 +29,14 @@ router.route('/music/:id').post((req, res) => {
 
 })
 
+router.route('/deleteAll').delete((req, res) => {
+    console.log("wtf")
+    Music.remove({})
+        .exec()
+        .then((data) => res.json("succeed"))}
+)
+
+
 router.route('/getMusics').get((req, res) => {
 
     Music.find().exec((error, musics) => {

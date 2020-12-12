@@ -14,6 +14,7 @@ const restricted = (req, res, next) => {
         console.log(116)
         req.session.error = 'Access denied!';
         res.send(403);
+        // res.json("not login");
     }
 }
 
@@ -34,7 +35,7 @@ async function authenticate(email, pass, fn) {
     await User.findOne({'email': email}).exec((error, user) => {
             if (!user) {
                 console.log(122)
-                fn(null, null);
+                return fn(null, null);
 
             }
             // apply the same algorithm to the POSTed password, applying
@@ -84,13 +85,15 @@ Date.prototype.addHours = function (h) {
 
 
 router.route('/find/:id').get((req, res) => {
-   // if (req.session.user) {
-        User.findById(req.params.id).populate("favouriteMusic", "musicId")
+   if (req.session.user) {
+       console.log(req.params.id)
+        User.findById(req.params.id).populate("favouriteMusic", {musicId: 1, title: 1})
+            .exec()
             .then(user => {
                 res.json(user)
 
             })
-   // }
+   }
 })
 
 router.route('/update/:id').put( async(req, res) => {
@@ -145,7 +148,8 @@ router.route('/update/:id').put( async(req, res) => {
 router.route('/login').post((req, res) => {
     authenticate(req.body.email, req.body.password, (error, user) => {
         if (error) {
-
+            console.log("line 151")
+            console.log(error)
             return res.status(400).send(error.toString());
         }
         if (user) {
@@ -163,10 +167,12 @@ router.route('/login').post((req, res) => {
             })
         }
         else {
-            req.session.error = 'Authentication failed, please check your '
-                                + ' username and password.'
-
-            res.status(400).send('Error: ' + req.session.error)
+            // req.session.error = 'Authentication failed, please check your '
+            //                     + ' username and password.'
+            console.log("line 172")
+            console.log(user);
+            console.log(error)
+            res.send(400);
 
         }
 
