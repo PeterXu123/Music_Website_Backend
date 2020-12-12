@@ -44,3 +44,18 @@ router.route('/findAllComments/:musicId').get((req, res) => {
     })
 
 module.exports = router;
+
+
+
+router.route('/deleteComment/:comId').delete((req, res) => {
+    console.log("--------------")
+    console.log(req.params.comId)
+    Comment.remove({_id: req.params.comId})
+        .then((comments) => {
+            console.log(comments)
+            res.json(comments)
+        })
+})
+
+module.exports = router;
+
