@@ -2,6 +2,8 @@ const striptags = require("striptags");
 
 const router = require('express').Router()
 let User = require('../models/user.model')
+let Music = require('../models/music.model')
+
 var hash = require('pbkdf2-password')()
 const restricted = (req, res, next) => {
     console.log("noooopo")
@@ -78,17 +80,17 @@ Date.prototype.addHours = function (h) {
     this.setTime(this.getTime() + (h * 60 * 59 * 1000));
     return this;
 }
-router.route('/find/:id').get((req, res) => {
-    console.log(49)
-    if (!req.session.user) {
-        User.find()
-            .then(users => {
-                req.session.user = users.find(u => u._id === req.params.id)
-            })
 
-        // req.session.user = User.find(u => u._id === req.params.id)
-    }
-    res.json(req.session.user)
+
+
+router.route('/find/:id').get((req, res) => {
+   // if (req.session.user) {
+        User.findById(req.params.id).populate("favouriteMusic", "musicId")
+            .then(user => {
+                res.json(user)
+
+            })
+   // }
 })
 
 router.route('/update/:id').put( async(req, res) => {
@@ -238,6 +240,66 @@ router.route('/:id').delete((req, res) => {
         .catch(error => res.status(400).json('Error: ' + error))
 
 })
+
+
+
+
+
+router.route('/addToFav').post((req, res) => {
+    let musicId = req.body.songId;
+    let userId = req.body.userId;
+
+    User.findOne({_id: userId}).exec((error, user) => {
+        if (error) {
+            res.statusCode(404).json(error)
+        }
+        else if(user != null) {
+            Music.findOne({musicId: musicId}).then((music) => {
+                user.favouriteMusic.push(music);
+                user.save();
+                res.json(user)
+            })
+        }
+    })
+})
+
+
+
+
+router.route('/removeFav').put( async (req, res) => {
+    console.log("enter remove Fave ----------")
+    let musicId = req.body.songId;
+    let userId = req.body.userId;
+    console.log(musicId)
+    console.log(userId)
+
+
+    User.findOne({_id: userId}).exec(async(error, user) => {
+        console.log(userId)
+        if (error) {
+            res.statusCode(404).json(error)
+        }
+        else if(user != null) {
+
+            let mid = await Music.findOne({'musicId': musicId}).exec();
+
+            let favourite  = user.favouriteMusic.filter(i => {
+
+                return i.toString() != mid._id})
+            User.update({_id: userId}, {$set : {favouriteMusic: favourite}})
+                .then((succeed) => {
+                    User.findOne({_id: userId}).exec().then((us) => {
+                        res.json(us);
+                    })
+                });
+
+        }
+    })
+})
+
+
+
+
 
 
 module.exports = router
