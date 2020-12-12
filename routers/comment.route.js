@@ -28,4 +28,33 @@ router.route('/createComment').post((req, res) => {
 })
 
 
+
+
+
+
+router.route('/findAllComments/:musicId').get((req, res) => {
+
+    Music.findOne({musicId: req.params.musicId})
+        .populate("comments")
+        .then((comments) => res.json(comments))
+    })
+    // Music.findOne({musicId: musicId}).exec((error, music) => {
+    //             if (error) {
+    //                 res.statusCode(404).json(error)
+    //
+    //             }
+    //             else if(music != null) {
+    //                 music.comments.push(comment);
+    //                 music.save();
+    //                 res.json(comment)
+    //             }
+    //         })
+    //     })
+    //     .catch((error) => res.json(error))
+
+
+
+
+
+
 module.exports = router;
