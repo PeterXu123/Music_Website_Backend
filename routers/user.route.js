@@ -391,4 +391,36 @@ router.route('/removeFriend').put(async(req, res) => {
 })
 
 
+
+
+router.route('/changeToAdmin').put(async(req, res) => {
+    console.log("here")
+    let userId = req.body.userId;
+
+
+    let user = await User.findOne({_id: userId}).exec();
+
+    user.role = 'admin';
+    console.log("404")
+    await User.update({_id: userId}, {$set: {role: user.role}}).exec();
+    console.log("399")
+    User.findOne({_id: userId}).then(
+        (o) => res.json(o)
+    )
+})
+
+
+
+
+
+router.route('/getRole/:uid').get(async(req, res) => {
+
+    let userId = req.params.uid;
+
+    let user = await User.findOne({_id: userId}).exec();
+    if(user != null) {
+        res.json(user.role);
+    }
+})
+
 module.exports = router
