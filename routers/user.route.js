@@ -98,6 +98,19 @@ router.route('/find/:id').get((req, res) => {
    // }
 })
 
+router.route('/myFriends/:id').get((req, res) => {
+    // if (req.session.user) {
+    console.log(req.params.id)
+    User.findById(req.params.id).populate("friends")
+        .exec()
+        .then(friends => {
+            res.json(friends)
+
+        })
+    // }
+})
+
+
 router.route('/update/:id').put( async(req, res) => {
     console.log("update")
     if (req.session.user) {
