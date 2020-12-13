@@ -87,7 +87,7 @@ Date.prototype.addHours = function (h) {
 
 
 router.route('/find/:id').get((req, res) => {
-   if (req.session.user) {
+   // if (req.session.user) {
        console.log(req.params.id)
         User.findById(req.params.id).populate("favouriteMusic", {musicId: 1, title: 1})
             .exec()
@@ -95,7 +95,7 @@ router.route('/find/:id').get((req, res) => {
                 res.json(user)
 
             })
-   }
+   // }
 })
 
 router.route('/update/:id').put( async(req, res) => {
