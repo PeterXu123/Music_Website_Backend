@@ -331,10 +331,51 @@ router.route('/removeUser/:uid').delete( async(req, res) => {
 
     console.log(commentList);
 
-
-
 });
 
+
+
+
+
+router.route('/addFriend').post(async(req, res) => {
+    let selfId = req.body.selfId;
+    let otherId = req.body.otherId;
+    let self = await User.findOne({_id: selfId}).exec();
+    let other = await User.findOne({_id: otherId}).exec();
+
+    self.friends.push(other);
+    await User.update({_id: selfId}, {$set: {friends: self.friends}}).exec();
+
+    other.friends.push(self);
+    await User.update({_id: otherId}, {$set: {friends: other.friends}}).exec();
+
+    console.log(self.friends)
+    console.log(other.friends)
+
+    User.findOne({_id: selfId}).then(
+        (self) => res.json(self)
+    )
+})
+
+
+router.route('/removeFriend').put(async(req, res) => {
+    console.log("here")
+    let selfId = req.body.selfId;
+    let otherId = req.body.otherId;
+
+    let self = await User.findOne({_id: selfId}).exec();
+    let other = await User.findOne({_id: otherId}).exec();
+
+    self.friends = self.friends.filter(f => f.toString() !== otherId);
+    await User.update({_id: selfId}, {$set: {friends: self.friends}}).exec();
+
+    other.friends = other.friends.filter(f => f.toString() !== selfId);
+    await User.update({_id: otherId}, {$set: {friends: other.friends}}).exec();
+
+    User.findOne({_id: selfId}).then(
+        (self) => res.json(self)
+    )
+})
 
 
 module.exports = router
