@@ -120,21 +120,27 @@ router.post("/song/id", (req, res) => {
 
 
 
-// router.post("/popular", (req, res) => {
-//     let searchReq = {
-//         url: convert(`https://api.spotify.com/v1/tracks`),
-//         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token')},
-//         json: true
-//     };
-//     request.get(searchReq, function(error, response, body) {
-//         if (!error && response.statusCode === 200) {
-//             console.log("----------------------------")
-//             res.send(body)
-//         }
-//         else {
-//         }
-//     });
-// });
+router.post("/popular", (req, res) => {
+    let searchReq = {
+        url: `https://api.spotify.com/v1/recommendations?market=US&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.4&min_popularity=50`,
+        headers: { 'Authorization': 'Bearer  ' +   req.app.get('token'),
+            'Content-Type': "application/json",
+            'Accept': 'application/json'
+
+        },
+        json: true
+    };
+    request.get(searchReq, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log("----------------------------")
+            res.send(body)
+        }
+        else {
+            console.log(response.statusCode)
+
+        }
+    });
+});
 
 
 
