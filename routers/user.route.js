@@ -30,6 +30,7 @@ const getUserProfile = (req, res) => {
         email: req.session.user.email,
         phoneNumber: req.session.user.phoneNumber,
         userId: req.session.user.userId,
+        role: req.session.user.role,
         expired: req.session.user.expired, rest: rest})
 }
 
@@ -174,7 +175,7 @@ router.route('/login').post((req, res) => {
                 let rest = expired - start;
                 req.session.user = {username: user.username,
                     email: user.email,
-                    userId: user._id, rest, expired, phoneNumber: user.phoneNumber};
+                    userId: user._id, rest, expired, phoneNumber: user.phoneNumber, role: user.role};
                 user = req.session.user
                 res.json(user);
 
@@ -236,7 +237,7 @@ router.route("/register").post((req, res) => {
                                 let expired = new Date().addHours(1);
                                 let rest = expired - start;
                                 let respUser = {username: newUser.username, userId: user._id,
-                                    email:  user.email,
+                                    email:  user.email, role: user.role,
                                     rest, expired}
                                 req.session.user = respUser;
                                 res.json(respUser)
