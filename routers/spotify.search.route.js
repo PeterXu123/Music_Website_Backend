@@ -121,6 +121,7 @@ router.post("/song/id", (req, res) => {
 
 
 router.post("/popular", (req, res) => {
+    console.log("recommend")
     let searchReq = {
         url: `https://api.spotify.com/v1/recommendations?market=US&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.4&min_popularity=50`,
         headers: { 'Authorization': 'Bearer  ' +   req.app.get('token'),
