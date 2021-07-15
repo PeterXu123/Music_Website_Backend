@@ -28,7 +28,7 @@
     "striptags": "^3.1.1"
   },
   "engines": {
-    "node": "10.16.2"
+    "node": ">=10"
   },
   "devDependencies": {
     "request": "^2.88.2"
