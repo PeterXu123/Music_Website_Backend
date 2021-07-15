@@ -31,7 +31,7 @@ app.use(session({
     // cookie: {}
 
 }));
-
+app.set('trust proxy', true);
 const uri = process.env.ATLAS_URI;
 console.log(uri);
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
