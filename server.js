@@ -1,3 +1,4 @@
+
 var express = require('express');
 var app = express();
 var request = require('request');
@@ -11,10 +12,13 @@ app.use(express.static(__dirname + '/index'))
     .use(express.json())
     .use(express.urlencoded());
 
+
 app.use(cors({
     origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000"],
     credentials: true,
 }))
+
+
 
 
 app.use(session({
@@ -22,14 +26,12 @@ app.use(session({
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
-    cookie: {secure: false, sameSite: "None"},
-    cookie: {
-        secure: true,
-        sameSite: "None"
-    }
+    cookie: {secure: true, sameSite: "None"},
+
+    // cookie: {}
 
 }));
-
+app.set('trust proxy', 1);
 const uri = process.env.ATLAS_URI;
 console.log(uri);
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
@@ -76,6 +78,10 @@ const getToken = function() {
         }
     });
 };
+app.get("/", (req, res) => {
+    res.sendStatus(200);
+
+})
 
 const searchRouter = require('./routers/spotify.search.route');
 const usersRouter = require('./routers/user.route')
