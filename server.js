@@ -26,12 +26,12 @@ app.use(session({
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: false,
-    cookie: {secure: true, sameSite: "None"},
+    cookie: {secure: false, sameSite: "None"},
 
     // cookie: {}
 
 }));
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 const uri = process.env.ATLAS_URI;
 console.log(uri);
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
