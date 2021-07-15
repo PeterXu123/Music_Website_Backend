@@ -8,14 +8,15 @@ let Comment = require('../models/comment.model')
 
 var hash = require('pbkdf2-password')()
 const restricted = (req, res, next) => {
-    console.log("noooopo")
+    console.log("dfsdfsdjhh")
     if (req.session.user) {
         console.log(114)
         next();
     } else {
         console.log(116)
         req.session.error = 'Access denied!';
-        res.send(403);
+        res.sendStatus(403);
+        console.log("hellow world");
         // res.json("not login");
     }
 }
@@ -26,12 +27,19 @@ const getUserProfile = (req, res) => {
     let rest = new Date(req.session.user.expired) - t;
     console.log(rest);
     console.log(req.session.user.expired)
-    res.json({username: req.session.user.username,
-        email: req.session.user.email,
-        phoneNumber: req.session.user.phoneNumber,
-        userId: req.session.user.userId,
-        role: req.session.user.role,
-        expired: req.session.user.expired, rest: rest})
+    if (req.session.user){
+        res.json({username: req.session.user.username,
+            email: req.session.user.email,
+            phoneNumber: req.session.user.phoneNumber,
+            userId: req.session.user.userId,
+            role: req.session.user.role,
+            expired: req.session.user.expired, rest: rest})
+    }
+    else {
+        console.log(37)
+        res.sendStatus(403)
+    }
+
 }
 
 async function authenticate(email, pass, fn) {
@@ -89,13 +97,22 @@ Date.prototype.addHours = function (h) {
 
 router.route('/find/:id').get((req, res) => {
    // if (req.session.user) {
-       console.log(req.params.id)
+       console.log(req.params.id + " 99")
+
+    if (req.params.id !== "undefined" ) {
+        console.log(req.params.id + " 991")
         User.findById(req.params.id).populate("favouriteMusic", {musicId: 1, title: 1})
             .exec()
             .then(user => {
                 res.json(user)
 
             })
+            .catch(error => console.log(error))
+    }
+    else {
+        res.json(undefined)
+    }
+
    // }
 })
 
@@ -216,6 +233,7 @@ router.route("/register").post((req, res) => {
     if (email !== req.body.email) {
         return res.json({status: 'Invalid email'})
     }
+    console.log(111111)
     User.findOne({ email: email }).exec()
         .then(users => {
             if(users !== null) {
@@ -246,7 +264,9 @@ router.route("/register").post((req, res) => {
 
 
 
-                        })
+                        }).catch(error => {
+                        res.status(409).send("User exist");
+                    })
 
                 });
             }
