@@ -26,7 +26,7 @@ app.use(session({
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
-    cookie: {secure: true, sameSite: "None"},
+    cookie: {secure: false, sameSite: "None"},
 
     // cookie: {}
 
