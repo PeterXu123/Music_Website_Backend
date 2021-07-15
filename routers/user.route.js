@@ -4,16 +4,22 @@ const router = require('express').Router()
 let User = require('../models/user.model')
 let Music = require('../models/music.model')
 let Comment = require('../models/comment.model')
-
-
 var hash = require('pbkdf2-password')()
+
+
+
+
+
 const restricted = (req, res, next) => {
-    console.log("dfsdfsdjhh")
+    console.log("restricted")
+    console.log(req.session)
+    console.log(req.session.user)
     if (req.session.user) {
         console.log(114)
         next();
     } else {
         console.log(116)
+        console.log(req.session.user)
         req.session.error = 'Access denied!';
         res.sendStatus(403);
         console.log("hellow world");
@@ -23,10 +29,13 @@ const restricted = (req, res, next) => {
 
 
 const getUserProfile = (req, res) => {
+    console.log("getUserProfile")
     let t = new Date();
     let rest = new Date(req.session.user.expired) - t;
     console.log(rest);
     console.log(req.session.user.expired)
+    console.log("get user profile 31")
+    console.log(req.session.user)
     if (req.session.user){
         res.json({username: req.session.user.username,
             email: req.session.user.email,
@@ -43,6 +52,7 @@ const getUserProfile = (req, res) => {
 }
 
 async function authenticate(email, pass, fn) {
+    console.log("auth")
     await User.findOne({'email': email}).exec((error, user) => {
             if (!user) {
                 console.log(122)
@@ -73,6 +83,7 @@ async function authenticate(email, pass, fn) {
 
 
 router.route('/users').get((req, res) => {
+    console.log("get all user")
     console.log(34)
     User.find()
         .then(users => res.json(users))
@@ -96,6 +107,7 @@ Date.prototype.addHours = function (h) {
 
 
 router.route('/find/:id').get((req, res) => {
+    console.log("find user")
    // if (req.session.user) {
        console.log(req.params.id + " 99")
 
@@ -117,6 +129,7 @@ router.route('/find/:id').get((req, res) => {
 })
 
 router.route('/myFriends/:id').get((req, res) => {
+    console.log("myfriend")
     // if (req.session.user) {
     console.log(req.params.id)
     User.findById(req.params.id).populate("friends")
@@ -179,6 +192,7 @@ router.route('/update/:id').put( async(req, res) => {
 
 
 router.route('/login').post((req, res) => {
+    console.log("login")
     authenticate(req.body.email, req.body.password, (error, user) => {
         if (error) {
             console.log("line 151")
@@ -195,6 +209,10 @@ router.route('/login').post((req, res) => {
                     userId: user._id, rest, expired, phoneNumber: user.phoneNumber, role: user.role};
                 user = req.session.user
                 res.json(user);
+
+                // setInterval(() => {
+                //     console.log("interval " + req.session.user.username)
+                // }, 4000)
 
 
             })
@@ -213,6 +231,7 @@ router.route('/login').post((req, res) => {
 })
 
 router.route("/logout").get((req, res) => {
+    console.log("logout")
     req.session.destroy((error) => {
         if (error) {
             res.json(error);
