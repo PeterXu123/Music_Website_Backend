@@ -19,6 +19,8 @@ app.use(cors({
 }))
 
 
+
+
 app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
@@ -78,6 +80,10 @@ const getToken = function() {
         }
     });
 };
+app.get("/", (req, res) => {
+    res.sendStatus(200);
+
+})
 
 const searchRouter = require('./routers/spotify.search.route');
 const usersRouter = require('./routers/user.route')
