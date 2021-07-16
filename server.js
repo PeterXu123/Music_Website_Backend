@@ -30,7 +30,7 @@ app.use(session({
         secure: true,
         sameSite: "None",
         expires: new Date(253402300000000)
-    }
+    },
     cookie: {expires: new Date(253402300000000)}
 
     // cookie: {}
