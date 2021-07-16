@@ -29,7 +29,7 @@ app.use(session({
     // cookie: {secure: false, sameSite: "None"},
     cookie: {
         secure: false,
-        sameSite: false
+        sameSite: "None"
     }
 
 }));
