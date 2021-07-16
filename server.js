@@ -28,8 +28,10 @@ app.use(session({
     proxy: true,
     cookie: {
         secure: true,
-        sameSite: "None"
+        sameSite: "None",
+        expires: new Date(253402300000000)
     }
+
 
     // cookie: {}
 
