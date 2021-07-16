@@ -33,7 +33,7 @@ app.use(session({
     }
 
 }));
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 const uri = process.env.ATLAS_URI;
 console.log(uri);
 mongoose.connect(uri, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology:
