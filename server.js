@@ -27,11 +27,11 @@ app.use(session({
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
     cookie: {
-        secure: true,
+        secure: false,
         sameSite: "None",
         expires: new Date(253402300000000)
     },
-    cookie: {expires: new Date(253402300000000)}
+    // cookie: {expires: new Date(253402300000000)}
 
     // cookie: {}
 
