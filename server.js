@@ -14,13 +14,13 @@ app.use(express.static(__dirname + '/index'))
 
 
 app.use(cors({
-    origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000","https://main.de3k7x0kgv2dx.amplifyapp.com"],
+    origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000","https://main.d2kaa2qkhlx7rg.amplifyapp.com/"],
     credentials: true,
 }))
 
 
 
-
+https://main.d2kaa2qkhlx7rg.amplifyapp.com
 app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
