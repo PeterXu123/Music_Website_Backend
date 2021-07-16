@@ -28,8 +28,8 @@ app.use(session({
     proxy: true,
     // cookie: {secure: false, sameSite: "None"},
     cookie: {
-        secure: true,
-        sameSite: "None"
+        secure: false,
+        sameSite: false
     }
 
 }));
