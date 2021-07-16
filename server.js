@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/index'))
 
 
 app.use(cors({
-    origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000"],
+    origin: ['https://webdev-music-website-client.herokuapp.com', "http://localhost:3000","https://main.de3k7x0kgv2dx.amplifyapp.com/"],
     credentials: true,
 }))
 
@@ -28,7 +28,7 @@ app.use(session({
     proxy: true,
     // cookie: {secure: false, sameSite: "None"},
     cookie: {
-        secure: "auto",
+        secure: true,
         sameSite: "None"
     }
 
