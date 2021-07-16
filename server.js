@@ -31,7 +31,7 @@ app.use(session({
         sameSite: "None",
         expires: new Date(253402300000000)
     }
-
+    cookie: {expires: new Date(253402300000000)}
 
     // cookie: {}
 
