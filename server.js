@@ -13,10 +13,7 @@ app.use(express.static(__dirname + '/index'))
     .use(express.urlencoded());
 
 
-app.use(cors({
-    origin: "*",
-    credentials: true,
-}))
+app.use(cors())
 
 
 
