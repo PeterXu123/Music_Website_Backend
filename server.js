@@ -26,14 +26,11 @@ app.use(session({
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
+    cookie: {secure: false, sameSite: "None"},
     cookie: {
-        secure: false,
-        sameSite: "None",
-        expires: new Date(253402300000000)
-    },
-    // cookie: {expires: new Date(253402300000000)}
-
-    // cookie: {}
+        secure: true,
+        sameSite: "None"
+    }
 
 }));
 // app.set('trust proxy', 1);
