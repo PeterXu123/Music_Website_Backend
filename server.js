@@ -20,15 +20,17 @@ app.use(cors({
 
 
 
-https://main.d2kaa2qkhlx7rg.amplifyapp.com
+// https://main.d2kaa2qkhlx7rg.amplifyapp.com
 app.use(session({
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     secret: 'EML8MnuXDvts02hPFNvuBijBDBCxmbu2ld',
     proxy: true,
     // cookie: {secure: false, sameSite: "None"},
+    //comment code below before pushing to production
     cookie: {
         secure: true,
+
         sameSite: "None"
     }
 

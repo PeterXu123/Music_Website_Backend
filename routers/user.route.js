@@ -42,6 +42,7 @@ const getUserProfile = (req, res) => {
             phoneNumber: req.session.user.phoneNumber,
             userId: req.session.user.userId,
             role: req.session.user.role,
+            gender: req.session.user.gender,
             expired: req.session.user.expired, rest: rest})
     }
     else {
@@ -144,6 +145,7 @@ router.route('/myFriends/:id').get((req, res) => {
 
 router.route('/update/:id').put( async(req, res) => {
     console.log("update")
+    console.log(req.body)
     if (req.session.user) {
         const product = await User.findById(req.params.id).exec();
         if (!product) return res.status(404).send('The product with the given ID was not found.');
@@ -171,8 +173,9 @@ router.route('/update/:id').put( async(req, res) => {
             email: req.session.user.email,
             phoneNumber: req.body.phoneNumber,
             userId: req.session.user.userId,
+            gender: req.body.gender,
             expired: req.session.user.expired}
-        res.send(req.session.user)
+        res.json(req.session.user)
 
     }
     //     let query = {$set: {}}
@@ -206,7 +209,7 @@ router.route('/login').post((req, res) => {
                 let rest = expired - start;
                 req.session.user = {username: user.username,
                     email: user.email,
-                    userId: user._id, rest, expired, phoneNumber: user.phoneNumber, role: user.role};
+                    userId: user._id, rest, expired, phoneNumber: user.phoneNumber, role: user.role, gender: user.gender};
                 user = req.session.user
                 res.json(user);
 
@@ -246,6 +249,8 @@ router.route("/register").post((req, res) => {
     let newUser = req.body
     let username = striptags(req.body.username)
     let email = striptags(req.body.email)
+    let gender = req.body.gender;
+    console.log(gender + " 252")
     if (username !== req.body.username) {
         return res.json({status: 'Invalid username'})
     }
@@ -259,12 +264,14 @@ router.route("/register").post((req, res) => {
                 return res.status(409).send("User exist");
             }
             else {
-                console.log("user doesn't exist")
+                console.log("user doesn't exist inner")
+
                 hash({password: newUser.password}, (err, pass, salt, hash) => {
                     delete newUser.password
                     newUser.hash = hash
                     newUser.salt = salt
                     const new_user = new User({...newUser})
+                    console.log(new_user.gender)
                     new_user.save()
                         .then((user) => {
                             console.log(user);
@@ -274,8 +281,8 @@ router.route("/register").post((req, res) => {
                                 let expired = new Date().addHours(1);
                                 let rest = expired - start;
                                 let respUser = {username: newUser.username, userId: user._id,
-                                    email:  user.email, role: user.role,
-                                    rest, expired}
+                                    email:  user.email, role: user.role, gender: user.gender,
+                                    rest, expired,}
                                 req.session.user = respUser;
                                 res.json(respUser)
 

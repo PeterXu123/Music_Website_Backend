@@ -4,7 +4,9 @@ const commentSchema = mongoose.Schema(
         content: String,
         musicId: String,
         userId: String,
-        userName: String
+        gender: String,
+        userName: String,
+        timestamp: String
     },
     {collection: 'comments'});
 

@@ -8,12 +8,15 @@ router.route('/createComment').post((req, res) => {
     let userId = req.body.userId;
     let content = req.body.content;
     let username = req.body.username;
+    let gender = req.body.gender
     console.log(username)
     Comment.create(
         {musicId: musicId,
             userId: userId,
             content: content,
-            userName: username})
+            gender: gender,
+            userName: username,
+            timestamp: req.body.timestamp})
         .then((comment) => {
             Music.findOne({musicId: musicId}).exec((error, music) => {
                 if (error) {
