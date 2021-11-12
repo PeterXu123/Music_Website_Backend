@@ -20,7 +20,7 @@ router.route('/createComment').post((req, res) => {
         .then((comment) => {
             Music.findOne({musicId: musicId}).exec((error, music) => {
                 if (error) {
-                    res.status(404).json(error)
+                    res.statusCode(404).json(error)
 
                 }
                 else if(music != null) {

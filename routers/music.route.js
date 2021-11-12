@@ -9,7 +9,7 @@ router.route('/music/:id').post((req, res) => {
         let title = req.body.title
         Music.findOne({musicId: req.params.id}).exec((error, music) => {
             if (error) {
-                res.status(404).json(error)
+                res.statusCode(404).json(error)
 
             }
             else if (music == null) {
@@ -41,7 +41,7 @@ router.route('/getMusics').get((req, res) => {
 
     Music.find().exec((error, musics) => {
         if (error) {
-            res.status(404).json(error)
+            res.statusCode(404).json(error)
 
         }
         else if (musics == null) {
