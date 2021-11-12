@@ -319,7 +319,7 @@ router.route('/addToFav').post((req, res) => {
 
     User.findOne({_id: userId}).exec((error, user) => {
         if (error) {
-            res.status(404).json(error)
+            res.statusCode(404).json(error)
         }
         else if(user != null) {
             Music.findOne({musicId: musicId}).then((music) => {
@@ -345,7 +345,7 @@ router.route('/removeFav').put( async (req, res) => {
     User.findOne({_id: userId}).exec(async(error, user) => {
         console.log(userId)
         if (error) {
-            res.status(404).json(error)
+            res.statusCode(404).json(error)
         }
         else if(user != null) {
 
